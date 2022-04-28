@@ -14,14 +14,17 @@ def test_minting(request):
     print("[", request.method, "], /test/minting")
 
     if request.method == 'POST':
-        user_id_ = request.POST['user_id']
-        user_name_ = request.POST['user_name']
-
-        print("user_id = ", user_id_)
-        print("user_name = ", user_name_)
-
         # store DB - tested (20220428)
-        ti = TestInfo(user_id=user_id_, user_name=user_name_, file_path="", ipfs_path="")
+        ti = TestInfo() #user_id=user_id_, user_name=user_name_, file_path="", ipfs_path="")
+        ti.user_id = request.POST['user_id']
+        ti.user_name = request.POST['user_name']
+
+        for img in request.FILES.getlist('images'):
+            ti.image = img
+            break;
+
+        print("user_id = ", ti.user_id, ", image = ", ti.image)
+
         ti.save()
 
         response = {

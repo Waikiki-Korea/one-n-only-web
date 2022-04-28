@@ -9,6 +9,7 @@ class TestInfo(models.Model):
     created_date = models.DateTimeField('date created', auto_now_add=True)
     updated_date = models.DateTimeField('date updated', auto_now=True)
     etc = models.CharField(max_length=255, null=True)
+    image = models.ImageField(upload_to='images/', blank=True, null=True)
 
     def __str__(self):
         return self.name

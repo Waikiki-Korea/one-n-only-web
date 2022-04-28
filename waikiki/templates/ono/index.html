@@ -33,7 +33,7 @@
             <div class="column" style="padding-top:25px;">
 
 
-                <form class="ui form" action="{% url 'ono:test_minting' %}" method="post">
+                <form class="ui form" action="{% url 'ono:test_minting' %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
 
                     <div class="field">
@@ -56,17 +56,15 @@
                         <label>ETC</label>
                         <input type="text" name="etc" placeholder="ETC">
                     </div>
-
+                    <div class="field">
+                        <label>Image</label>
+                        <input type="file" name="images" id="imageFileInput" accept="image/*" multiple>
+                    </div>
                     <div align="right">
                         <button class="ui button" type="submit">Submit</button>
                     </div>
                 </form>
 
-                <!--
-                    <div class="field">
-                        <label>Image</label>
-                        <input type="file" name="file" id="imageFileInput" accept="image/*"> --> <!-- image/png, image/jpeg, ... -->
-<!--                    </div> -->
 
             </div>
 
