@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 
 # ONO Database - Image files
-media/images/*
+waikiki/media/images/*
