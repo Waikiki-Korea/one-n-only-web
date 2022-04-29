@@ -127,3 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# ONO Database - Image files
+waikiki/media/images/*
