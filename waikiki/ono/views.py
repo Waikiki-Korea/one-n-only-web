@@ -28,17 +28,19 @@ def test_minting(request):
         ti.save()
 
         response = {
-            "result":"success",
+            "result":"successful",
             "reason":"OK"
         }
 
-        return HttpResponse(json.dumps(response), content_type = "application/json")
+        # return HttpResponse(json.dumps(response), content_type = "application/json")
     else:
         response = {
-            "result":"fail",
-            "reason":"method is GET"
+            "result":"failed",
+            "reason":"Request method is GET"
         }
-        return HttpResponse(json.dumps(response), content_type = "application/json")
 
+        # return HttpResponse(json.dumps(response), content_type = "application/json")
+
+    return render(request, 'ono/result.html', response)
     # raise Http404("Oops!...")
     # return HttpResponse(response)

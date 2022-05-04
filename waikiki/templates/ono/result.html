@@ -15,6 +15,12 @@
     <script>
         $(document).ready(function () {
             $.getScript("{% static 'js/ono-0.1.0.js' %}", function () {
+                if ("{{ result }}" == 'successful') {
+                    $('#result_box').addClass("green");
+                } else {
+                    $('#result_box').addClass("red");
+                }
+
             });
         });
     </script>
@@ -30,38 +36,16 @@
 
     <div class="ui stackable four column centered grid" style="margin:auto;">
         <div class="two column centered row">
-            <div class="column" style="padding-top:25px;">
-                <form class="ui form" action="{% url 'ono:test_minting' %}" method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-
-                    <div class="field">
-                        <label>User ID</label>
-                        <input type="text" name="user_id" placeholder="User ID">
+            <div class="column" style="padding:50px 0 20px 0;">
+                <div class="ui message" id="result_box">
+                    <div class="header">
+                        Your request was {{ result }}.
                     </div>
-                    <div class="field">
-                        <label>User Name</label>
-                        <input type="text" name="user_name" placeholder="User Name">
-                    </div>
-                    <div class="field">
-                        <label>File Path</label>
-                        <input type="text" name="file_path" placeholder="File Path">
-                    </div>
-                    <div class="field">
-                        <label>IPFS Path</label>
-                        <input type="text" name="ipfs_path" placeholder="IPFS Path">
-                    </div>
-                    <div class="field">
-                        <label>ETC</label>
-                        <input type="text" name="etc" placeholder="ETC">
-                    </div>
-                    <div class="field">
-                        <label>Image</label>
-                        <input type="file" name="images" id="imageFileInput" accept="image/*" multiple>
-                    </div>
-                    <div align="right">
-                        <button class="ui blue submit button" type="submit">Submit</button>
-                    </div>
-                </form>
+                    <p>{{ reason }}</p>
+                </div>
+            </div>
+            <div class="right aligned column" style="padding:0 0 50px 0;">
+                <button class="positive ui button" onClick="window.location.href='/'">Go to the Main page</button>
             </div>
 
             <div class="ui divider"></div>
