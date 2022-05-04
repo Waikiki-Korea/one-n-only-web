@@ -17,6 +17,10 @@
             $.getScript("{% static 'js/ono-0.1.0.js' %}", function () {
             });
         });
+
+        function submit_loading() {
+            $("#submit_button").addClass('loading');
+        }
     </script>
 
 </head>
@@ -59,7 +63,7 @@
                         <input type="file" name="images" id="imageFileInput" accept="image/*" multiple>
                     </div>
                     <div align="right">
-                        <button class="ui blue submit button" type="submit">Submit</button>
+                        <button class="ui blue submit button" type="submit" id="submit_button" onClick="submit_loading()">Submit</button>
                     </div>
                 </form>
             </div>
