@@ -12,4 +12,4 @@ class TestInfo(models.Model):
     image = models.ImageField(upload_to='images/', blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return "user_id: " + self.user_id + ", image: " + str(self.image)

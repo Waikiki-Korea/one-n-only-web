@@ -1,81 +1,60 @@
-<!DOCTYPE html>
+{% extends 'ono/base.html' %}
 {% load static %}
-<html lang="ko">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>One-n-Only</title>
-    <link rel="icon" href="{% static 'img/favicon.ico' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'Semantic-UI-CSS-master/semantic.min.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-
-    <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
-    <script src="{% static 'Semantic-UI-CSS-master/semantic.min.js' %}"></script>
-    <script>
-        $(document).ready(function () {
-            $.getScript("{% static 'js/ono-0.1.0.js' %}", function () {
-            });
+{% block content %}
+<script>
+    $(document).ready(function () {
+        $.getScript("{% static 'js/ono-0.1.0.js' %}", function () {
         });
-    </script>
+    });
 
-</head>
+    function submit_loading() {
+        $("#submit_button").addClass('loading');
+    }
+</script>
 
-<body>
-    <div class="ui container" style="padding-top:10px;">
-        <div class="ui menu" style="height:55px;background-color:#8BD8BD;">
-            <a class="header item" href="#" style="color:#243665;background-color:#8BD8BD;">One-n-Only</a>
+<div class="ui stackable four column centered grid" style="margin:auto;">
+    <div class="two column centered row">
+        <div class="column" style="padding-top:25px;">
+            <form class="ui form" action="{% url 'ono:test_minting' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="field">
+                    <label>User ID</label>
+                    <input type="text" name="user_id" placeholder="User ID">
+                </div>
+                <div class="field">
+                    <label>User Name</label>
+                    <input type="text" name="user_name" placeholder="User Name">
+                </div>
+                <div class="field">
+                    <label>File Path</label>
+                    <input type="text" name="file_path" placeholder="File Path">
+                </div>
+                <div class="field">
+                    <label>IPFS Path</label>
+                    <input type="text" name="ipfs_path" placeholder="IPFS Path">
+                </div>
+                <div class="field">
+                    <label>ETC</label>
+                    <input type="text" name="etc" placeholder="ETC">
+                </div>
+                <div class="field">
+                    <label>Image</label>
+                    <input type="file" name="images" id="imageFileInput" accept="image/*" multiple>
+                </div>
+                <div align="right">
+                    <button class="ui blue submit button" type="submit" id="submit_button"
+                        onClick="submit_loading()">Submit</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="ui divider"></div>
+        <div class="right aligned column">
+            <a href="https://github.com/waikiki-korea" target="_blank"><img
+                    src="{% static 'img/GitHub-Mark-64px.png' %}" style="width:25px;"></a>
+            <p>Copyright &copy; 2022 <b>Team Waikiki</b> all rights reserved.</p>
         </div>
     </div>
-
-    <div class="ui stackable four column centered grid" style="margin:auto;">
-        <div class="two column centered row">
-            <div class="column" style="padding-top:25px;">
-
-
-                <form class="ui form" action="{% url 'ono:test_minting' %}" method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-
-                    <div class="field">
-                        <label>User ID</label>
-                        <input type="text" name="user_id" placeholder="User ID">
-                    </div>
-                    <div class="field">
-                        <label>User Name</label>
-                        <input type="text" name="user_name" placeholder="User Name">
-                    </div>
-                    <div class="field">
-                        <label>File Path</label>
-                        <input type="text" name="file_path" placeholder="File Path">
-                    </div>
-                    <div class="field">
-                        <label>IPFS Path</label>
-                        <input type="text" name="ipfs_path" placeholder="IPFS Path">
-                    </div>
-                    <div class="field">
-                        <label>ETC</label>
-                        <input type="text" name="etc" placeholder="ETC">
-                    </div>
-                    <div class="field">
-                        <label>Image</label>
-                        <input type="file" name="images" id="imageFileInput" accept="image/*" multiple>
-                    </div>
-                    <div align="right">
-                        <button class="ui button" type="submit">Submit</button>
-                    </div>
-                </form>
-
-
-            </div>
-
-            <div class="ui divider"></div>
-            <div class="right aligned column">
-                <a href="https://github.com/waikiki-korea" target="_blank"><img
-                        src="{% static 'img/GitHub-Mark-64px.png' %}" style="width:25px;"></a>
-                <p>Copyright &copy; 2022 <b>Team Waikiki</b> all rights reserved.</p>
-            </div>
-        </div>
-    </div>
-</body>
-
-</html>
+</div>
+{% endblock %}
