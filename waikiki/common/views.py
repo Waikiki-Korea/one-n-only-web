@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
-from common.forms import UserForm
+from common.forms import UserForm, OnoUserChangeForm
 
 # Create your views here.
 
@@ -17,3 +17,15 @@ def signup(request):
     else:
         form = UserForm()
     return render(request, 'common/signup.html', {'form': form})
+
+def update(request, pk):
+    if request.method == "POST":
+        form = OnoUserChangeForm(request.POST, instance=request.user)
+        print('1234')
+        if form.is_valid():
+            print('5678')
+            form.save()
+            return redirect('../../../')
+    else:
+        form = OnoUserChangeForm(instance=request.user)
+    return render(request, 'common/update.html', {'form': form})

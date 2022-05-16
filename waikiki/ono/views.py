@@ -16,6 +16,9 @@ def index(request):
 ### [DELETE THIS][TESTCODE][E] }
     return render(request, 'ono/index.html')
 
+def profile(request):
+    return render(request, 'ono/profile.html')
+
 def test_minting(request):
     print("[", request.method, "], /test/minting")
 

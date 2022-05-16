@@ -9,7 +9,7 @@
         </a>
         <div class="right menu">
             {% if user.is_authenticated %}
-                <div class="item">{{ user.username }}</div>
+                <a class="item" href="{% url 'common:update' pk=user.id %}">{{ user.username }}</a>
                 <a class="item ui red label" href="{% url 'common:logout' %}">Sign out</a>
             {% else %}
                 <a class="item" href="{% url 'common:login' %}">Sign in</a>
