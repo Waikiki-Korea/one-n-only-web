@@ -32,6 +32,11 @@
                         <input type="text" class="form-control" name="email" id="email"
                                value="{{ form.email.value|default_if_none:'' }}">
                     </div>
+                    <div class="field">
+                        <label for="eth_address">Ethereum Address</label>
+                        <input type="text" class="form-control" name="eth_address" id="eth_address"
+                               value="{{ form.eth_address.value|default_if_none:'' }}">
+                    </div>
                     <div align="right">
                         <button class="ui blue submit button" type="submit" id="submit_button">Sign Up</button>
                     </div>
