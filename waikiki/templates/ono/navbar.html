@@ -1,12 +1,21 @@
 <div class="ui container" style="padding-top:10px;">
     <div class="ui menu" style="height:55px;background-color:#8BD8BD;">
         <a class="header item" href="/" style="color:#243665;background-color:#8BD8BD;">One-n-Only</a>
-        <a class="item">
+        {% if user.is_authenticated %}
+        <a class="item" href="{% url 'ono:collection' user.id %}">
             Collection
         </a>
-        <a class="item">
+        <a class="item" href="{% url 'ono:mint' user.id %}">
             Mint
         </a>
+        {% else %}
+        <a class="item" href="{% url 'common:login' %}">
+            Collection
+        </a>
+        <a class="item" href="{% url 'common:login' %}">
+            Mint
+        </a>
+        {% endif %}
         <div class="right menu">
             {% if user.is_authenticated %}
                 <a class="item" href="{% url 'common:update' pk=user.id %}">{{ user.username }}</a>

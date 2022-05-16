@@ -9,7 +9,7 @@
                 <h1 class="ui header center aligned">SIGN UP</h1>
             </div>
 
-                <form class="ui form" action="{% url 'common:signup' %}" method="post" enctyp="multipart/form-data">
+                <form class="ui form" action="{% url 'common:signup' %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     {% include "common/form_errors.html" %}
                     <div class="field">
@@ -37,6 +37,11 @@
                         <input type="text" class="form-control" name="eth_address" id="eth_address"
                                value="{{ form.eth_address.value|default_if_none:'' }}">
                     </div>
+                    <div class="field">
+                        <label for="symbol">Symbol</label>
+                        <input type="file" name="symbol" id="symbol" accept="image/*" multiple>
+                    </div>
+    
                     <div align="right">
                         <button class="ui blue submit button" type="submit" id="submit_button">Sign Up</button>
                     </div>

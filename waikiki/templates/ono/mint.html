@@ -15,15 +15,11 @@
 <div class="ui stackable four column centered grid" style="margin:auto;">
     <div class="two column centered row">
         <div class="column" style="padding-top:25px;">
+
+            This is mint page
+
             <form class="ui form" action="{% url 'ono:test_minting' %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-{{user.username}}
-<br>
-
-<br>
-<img src="/media/images/asasdf.jpg" />
-<img src="/media/{{user.symbol}}" />
-
 
                 <div class="field">
                     <label>User ID</label>

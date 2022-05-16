@@ -6,7 +6,7 @@ from common.forms import UserForm, OnoUserChangeForm
 
 def signup(request):
     if request.method == "POST":
-        form = UserForm(request.POST)
+        form = UserForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
@@ -21,9 +21,7 @@ def signup(request):
 def update(request, pk):
     if request.method == "POST":
         form = OnoUserChangeForm(request.POST, instance=request.user)
-        print('1234')
         if form.is_valid():
-            print('5678')
             form.save()
             return redirect('../../../')
     else:

@@ -16,8 +16,11 @@ def index(request):
 ### [DELETE THIS][TESTCODE][E] }
     return render(request, 'ono/index.html')
 
-def profile(request):
-    return render(request, 'ono/profile.html')
+def collection(request, user_id):
+    return render(request, 'ono/collection.html')
+
+def mint(request, user_id):
+    return render(request, 'ono/mint.html')
 
 def test_minting(request):
     print("[", request.method, "], /test/minting")
