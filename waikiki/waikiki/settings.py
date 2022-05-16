@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'common.apps.CommonConfig',
     'ono.apps.OnoConfig',
     'django.contrib.admin',
     'django.contrib.auth',
