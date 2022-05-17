@@ -130,3 +130,6 @@ dmypy.json
 
 # ONO Database - Image files
 waikiki/media/images/*
+waikiki/media/user/*
+waikiki/media/collection/*
+waikiki/media/temp/*
