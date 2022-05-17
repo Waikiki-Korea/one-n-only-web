@@ -1,9 +1,6 @@
 from django.contrib import admin
 # from .models import TestInfo
-from .models import OnoUser
-from .models import Collection
-from .models import Token
-from .models import TempImage
+from .models import OnoUser, Collection, Token, TempImage, Crawled
 
 # class TestInfoAdmin(admin.ModelAdmin):
     # search_fields = ['user_id', 'image']
@@ -20,9 +17,13 @@ class TokenAdmin(admin.ModelAdmin):
 class TempImageAdmin(admin.ModelAdmin):
     search_fields = ['id', 'image']
 
+class CrawledAdmin(admin.ModelAdmin):
+    search_fields = ['id', 'ipfs_path']
+
 # admin.site.register(TestInfo, TestInfoAdmin)
 admin.site.register(OnoUser, OnoUserAdmin)
 admin.site.register(Collection, CollectionAdmin)
 admin.site.register(Token, TokenAdmin)
 admin.site.register(TempImage, TempImageAdmin)
+admin.site.register(Crawled, CrawledAdmin)
 # Register your models here.

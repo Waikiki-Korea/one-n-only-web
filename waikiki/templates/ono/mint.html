@@ -15,35 +15,52 @@
 <div class="ui stackable four column centered grid" style="margin:auto;">
     <div class="two column centered row">
         <div class="column" style="padding-top:25px;">
-
-            This is mint page
-
-            <form class="ui form" action="{% url 'ono:test_minting' %}" method="post" enctype="multipart/form-data">
+            <form class="ui form" action="{% url 'ono:mint' user.id %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
 
                 <div class="field">
                     <label>User ID</label>
-                    <input type="text" name="user_id" placeholder="User ID">
+                    <input type="text" name="user_id" placeholder="User ID" value="{{ user.id }}" disabled>
                 </div>
                 <div class="field">
                     <label>User Name</label>
-                    <input type="text" name="user_name" placeholder="User Name">
+                    <input type="text" name="user_name" placeholder="User Name" value="{{ user.username }}" disabled>
                 </div>
                 <div class="field">
-                    <label>File Path</label>
-                    <input type="text" name="file_path" placeholder="File Path">
+                    <label>Blockchain (1: ETH)</label>
+                    <input type="number" name="blockchain" placeholder="Blockchain" value="1">
+                </div>
+                <div class="field">
+                    <label>Collection ID</label>
+                    <input type="text" name="collection_id" placeholder="Collection ID" value="1">
+                </div>
+                <div class="field">
+                    <label>Title</label>
+                    <input type="text" name="title" placeholder="Title">
+                </div>
+                <div class="field">
+                    <label>Media Type (1: Image)</label>
+                    <input type="number" name="media_type" placeholder="Token size" value="1">
                 </div>
                 <div class="field">
                     <label>IPFS Path</label>
                     <input type="text" name="ipfs_path" placeholder="IPFS Path">
                 </div>
                 <div class="field">
-                    <label>ETC</label>
-                    <input type="text" name="etc" placeholder="ETC">
+                    <label>Token Path</label>
+                    <input type="text" name="token_path" placeholder="Token Path">
                 </div>
                 <div class="field">
-                    <label>Image</label>
-                    <input type="file" name="images" id="imageFileInput" accept="image/*" multiple>
+                    <label>SHA256 Hash</label>
+                    <input type="text" name="sha256_hash" placeholder="SHA256 Hash">
+                </div>
+                <div class="field">
+                    <label>Description</label>
+                    <input type="text" name="description" placeholder="Description">
+                </div>
+                <div class="field">
+                    <label>Owner</label>
+                    <input type="text" name="owner" placeholder="Owner">
                 </div>
                 <div align="right">
                     <button class="ui blue submit button" type="submit" id="submit_button"

@@ -1,14 +1,11 @@
 import json
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, get_list_or_404
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.http import Http404
-from ono.models import Collection, OnoUser, Token;
-
-# from ono.models import TestInfo
-### [DELETE THIS][TESTCODE][S] {
-# from ono.modules.ono_engine.test import printTest
-### [DELETE THIS][TESTCODE][E] }
+from ono.models import Collection, OnoUser, Token
+from django.contrib.auth import get_user_model
+from ono.modules.ono_engine.test import testComparison
 
 # Create your views here.
 def index(request):
@@ -17,14 +14,16 @@ def index(request):
     # printTest("aaaaaaaaa")
 ### [DELETE THIS][TESTCODE][E] }
     collections = Collection.objects.all()
-    return render(request, 'ono/index.html', {'collections': collections})
+    tokens = Token.objects.all()
+
+    return render(request, 'ono/index.html', {'collections': collections, 'tokens': tokens})
 
 def collection(request, user_id):
     print("[", request.method, "], /", user_id, "/collection")
 
     response = {
         "result":"failed",
-        "reason":"Request method is GET"
+        "reason":"<TBD>"
     }
     if request.method == 'POST':
         print('[ Request ] ', request)
@@ -57,19 +56,52 @@ def collection(request, user_id):
 
     return render(request, 'ono/result.html', response)
 
-def mint(request, user_id):
-    print("[", request.method, "], /", user_id, "/mint")
+def mint(request, _user_id):
+    print("[", request.method, "], /", _user_id, "/mint")
 
+    response = {
+        "result":"failed",
+        "reason":"<TBD>"
+    }
     if request.method == 'POST':
         print('[ Request ] ', request)
 
         token = Token()
         # id, collection_id, title, media_type, ipfs_path, token_path, sha256_hash, description, owner, created_date, updated_date
+        collections = get_list_or_404(Collection, user_id=_user_id)
+
+        token.collection_id = collections[int(request.POST['collection_id'])]
+        token.title = request.POST['title']
+        token.media_type = request.POST['media_type']
+        token.ipfs_path = request.POST['ipfs_path']
+        token.token_path = request.POST['token_path']
+        token.sha256_hash = request.POST['sha256_hash']
+        token.description = request.POST['description']
+        token.owner = request.POST['owner']
+
+        # 이미지 판단 시작 [
+        image_response = testComparison(token.ipfs_path)
+        print("[image_response] ", image_response)
+        '''
+        <TBD>
+        response 판단 후, 유사도 판단에 따라 등록 여부를 결정.
+        '''
+        # 이미지 판단 끝 ]
+        token.save()
+
+        response = {
+            "result":"successful",
+            "reason":"OK"
+        }
 
     else:
         print('..')
+        # collections = list(Collection.objects.filter(user_id=_user_id))
+        # get_object_or_404(Collection, user_id=_user_id)
+        # print("[ collections ] ", collections)
+        return render(request, 'ono/mint.html')
 
-    return render(request, 'ono/mint.html')
+    return render(request, 'ono/result.html', response)
 
 def test_minting(request):
     print("[", request.method, "], /test/minting")
