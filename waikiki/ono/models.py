@@ -11,7 +11,7 @@ from django.contrib.postgres.fields import ArrayField
 class OnoUser(AbstractUser):
     eth_address = models.CharField(max_length=255)
     collection_ids = ArrayField(models.IntegerField(null=True, blank=True), null=True, blank=True)
-    symbol = models.ImageField(upload_to='user/symbol/', blank=True, null=True) # default='album_logos/no-image.jpg')
+    symbol = models.ImageField(upload_to='user/symbol/', blank=True, null=True, default='white-image.png') # default='album_logos/no-image.jpg')
 
 class Collection(models.Model):
     id = models.BigAutoField(primary_key=True)
