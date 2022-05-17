@@ -1,8 +1,10 @@
 import json
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.http import Http404
+from ono.models import Collection, OnoUser, Token;
+
 # from ono.models import TestInfo
 ### [DELETE THIS][TESTCODE][S] {
 # from ono.modules.ono_engine.test import printTest
@@ -14,12 +16,59 @@ def index(request):
 ### [DELETE THIS][TESTCODE][S] {
     # printTest("aaaaaaaaa")
 ### [DELETE THIS][TESTCODE][E] }
-    return render(request, 'ono/index.html')
+    collections = Collection.objects.all()
+    return render(request, 'ono/index.html', {'collections': collections})
 
 def collection(request, user_id):
-    return render(request, 'ono/collection.html')
+    print("[", request.method, "], /", user_id, "/collection")
+
+    response = {
+        "result":"failed",
+        "reason":"Request method is GET"
+    }
+    if request.method == 'POST':
+        print('[ Request ] ', request)
+
+        collection = Collection()
+        # id, user_id, title, symbol, blockchain, token_size, media_type, contract_address, description, create_date, updated_date
+        onoUser = get_object_or_404(OnoUser, pk=user_id)
+
+        collection.user_id = onoUser;
+        collection.title = request.POST['title']
+        for img in request.FILES.getlist('symbol'):
+            collection.symbol = img
+            break;
+        collection.blockchain = request.POST['blockchain']
+        collection.token_size = request.POST['token_size']
+        collection.media_type = request.POST['media_type']
+        collection.contract_address = request.POST['contract_address']
+        collection.description = request.POST['description']
+
+        collection.save()
+
+        response = {
+            "result":"successful",
+            "reason":"OK"
+        }
+
+    else:
+        print('..')
+        return render(request, 'ono/collection.html')
+
+    return render(request, 'ono/result.html', response)
 
 def mint(request, user_id):
+    print("[", request.method, "], /", user_id, "/mint")
+
+    if request.method == 'POST':
+        print('[ Request ] ', request)
+
+        token = Token()
+        # id, collection_id, title, media_type, ipfs_path, token_path, sha256_hash, description, owner, created_date, updated_date
+
+    else:
+        print('..')
+
     return render(request, 'ono/mint.html')
 
 def test_minting(request):
