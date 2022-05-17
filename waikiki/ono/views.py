@@ -1,12 +1,11 @@
 import json
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, get_list_or_404
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.http import Http404
-from ono.models import TestInfo
-### [DELETE THIS][TESTCODE][S] {
-# from ono.modules.ono_engine.test import printTest
-### [DELETE THIS][TESTCODE][E] }
+from ono.models import Collection, OnoUser, Token
+from django.contrib.auth import get_user_model
+from ono.modules.ono_engine.test import testComparison
 
 # Create your views here.
 def index(request):
@@ -14,24 +13,112 @@ def index(request):
 ### [DELETE THIS][TESTCODE][S] {
     # printTest("aaaaaaaaa")
 ### [DELETE THIS][TESTCODE][E] }
-    return render(request, 'ono/index.html')
+    collections = Collection.objects.all()
+    tokens = Token.objects.all()
+
+    return render(request, 'ono/index.html', {'collections': collections, 'tokens': tokens})
+
+def collection(request, user_id):
+    print("[", request.method, "], /", user_id, "/collection")
+
+    response = {
+        "result":"failed",
+        "reason":"<TBD>"
+    }
+    if request.method == 'POST':
+        print('[ Request ] ', request)
+
+        collection = Collection()
+        # id, user_id, title, symbol, blockchain, token_size, media_type, contract_address, description, create_date, updated_date
+        onoUser = get_object_or_404(OnoUser, pk=user_id)
+
+        collection.user_id = onoUser;
+        collection.title = request.POST['title']
+        for img in request.FILES.getlist('symbol'):
+            collection.symbol = img
+            break;
+        collection.blockchain = request.POST['blockchain']
+        collection.token_size = request.POST['token_size']
+        collection.media_type = request.POST['media_type']
+        collection.contract_address = request.POST['contract_address']
+        collection.description = request.POST['description']
+
+        collection.save()
+
+        response = {
+            "result":"successful",
+            "reason":"OK"
+        }
+
+    else:
+        print('..')
+        return render(request, 'ono/collection.html')
+
+    return render(request, 'ono/result.html', response)
+
+def mint(request, _user_id):
+    print("[", request.method, "], /", _user_id, "/mint")
+
+    response = {
+        "result":"failed",
+        "reason":"<TBD>"
+    }
+    if request.method == 'POST':
+        print('[ Request ] ', request)
+
+        token = Token()
+        # id, collection_id, title, media_type, ipfs_path, token_path, sha256_hash, description, owner, created_date, updated_date
+        collections = get_list_or_404(Collection, user_id=_user_id)
+
+        token.collection_id = collections[int(request.POST['collection_id'])]
+        token.title = request.POST['title']
+        token.media_type = request.POST['media_type']
+        token.ipfs_path = request.POST['ipfs_path']
+        token.token_path = request.POST['token_path']
+        token.sha256_hash = request.POST['sha256_hash']
+        token.description = request.POST['description']
+        token.owner = request.POST['owner']
+
+        # 이미지 판단 시작 [
+        image_response = testComparison(token.ipfs_path)
+        print("[image_response] ", image_response)
+        '''
+        <TBD>
+        response 판단 후, 유사도 판단에 따라 등록 여부를 결정.
+        '''
+        # 이미지 판단 끝 ]
+        token.save()
+
+        response = {
+            "result":"successful",
+            "reason":"OK"
+        }
+
+    else:
+        print('..')
+        # collections = list(Collection.objects.filter(user_id=_user_id))
+        # get_object_or_404(Collection, user_id=_user_id)
+        # print("[ collections ] ", collections)
+        return render(request, 'ono/mint.html')
+
+    return render(request, 'ono/result.html', response)
 
 def test_minting(request):
     print("[", request.method, "], /test/minting")
 
     if request.method == 'POST':
         # store DB - tested (20220428)
-        ti = TestInfo() #user_id=user_id_, user_name=user_name_, file_path="", ipfs_path="")
-        ti.user_id = request.POST['user_id']
-        ti.user_name = request.POST['user_name']
+        # ti = TestInfo() #user_id=user_id_, user_name=user_name_, file_path="", ipfs_path="")
+        # ti.user_id = request.POST['user_id']
+        # ti.user_name = request.POST['user_name']
 
-        for img in request.FILES.getlist('images'):
-            ti.image = img
-            break;
+        # for img in request.FILES.getlist('images'):
+        #     ti.image = img
+        #     break;
 
-        print("user_id = ", ti.user_id, ", image = ", ti.image)
+        # print("user_id = ", ti.user_id, ", image = ", ti.image)
 
-        ti.save()
+        # ti.save()
 
         response = {
             "result":"successful",

@@ -1,0 +1,41 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="ui stackable four column centered grid" style="margin:auto;">
+    <div class="four column centered row">
+        <div class="column" style="padding-top:25px;">
+            {% include "common/form_errors.html" %}
+            <div style="padding-bottom:20px;">
+                <h1 class="ui header center aligned">SIGN IN</h1>
+            </div>
+            <form class="ui form" action="{% url 'common:login' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="field">
+                    <label for="username">User ID</label>
+                    <input type="text" name="username" id="username"
+                        value="{{ form.username.value|default_if_none:'' }}" placeholder="User ID">
+                </div>
+                <div class="field">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password"
+                        value="{{ form.password.value|default_if_none:'' }}" placeholder="Password">
+                </div>
+                <div align="right">
+                    <button class="ui blue submit button" type="submit" id="submit_button">Sign in</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="ui divider"></div>
+
+    </div>
+    <div class="one column centered row">
+        <div class="right aligned column">
+            <a href="https://github.com/waikiki-korea" target="_blank"><img
+                    src="{% static 'img/GitHub-Mark-64px.png' %}" style="width:25px;"></a>
+            <p>Copyright &copy; 2022 <b>Team Waikiki</b> all rights reserved.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

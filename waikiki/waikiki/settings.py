@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'common.apps.CommonConfig',
     'ono.apps.OnoConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -95,6 +96,7 @@ DATABASES = {
     }
 }
 
+AUTH_USER_MODEL = 'ono.OnoUser'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -141,3 +143,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Handle Media files
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/' # URL prefix for each media file
+
+# LOGIN
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
