@@ -23,7 +23,19 @@
                 </div>
                 <p>{{ reason }}</p>
             </div>
+            {% if similarity %}
+            <div class="ui icon message">
+                <i class="eye icon"></i>
+                <div class="content">
+                    <div class="header">
+                        Similarity
+                    </div>
+                    <p>{{ similarity }}</p>
+                </div>
+            </div>
+            {% endif %}
         </div>
+
         <div class="right aligned column" style="padding:0 0 50px 0;">
             <button class="positive ui button" onClick="window.location.href='/'">Go to the Main page</button>
         </div>

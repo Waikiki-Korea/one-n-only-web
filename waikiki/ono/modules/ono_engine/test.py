@@ -6,8 +6,8 @@ from os.path import isfile, join
 import datetime as pydatetime
 from ono.models import Token, Crawled, TempUrl
 
-def testComparison(ipfs_path):
-    print("[testComparison] ipfs_path = ", ipfs_path)
+def testComparison(file_path):
+    print("[testComparison] file_path = ", file_path)
     time_start = pydatetime.datetime.now()
 
     '''
@@ -25,7 +25,6 @@ def testComparison(ipfs_path):
     # 2022-05-18 / 이렇게 쓰세요
     temp_url_list = list(TempUrl.objects.all())
     print(temp_url_list[0].ipfs_path)
-
 
 
     similarity = 99.999
