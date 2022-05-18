@@ -70,6 +70,9 @@ class Crawled(models.Model):
     updated_date = models.DateTimeField('date updated', auto_now=True)
     blockchain = models.PositiveIntegerField()
 
+class TempUrl(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    ipfs_path = models.TextField(blank=True)
 
 # class TestInfo(models.Model):
 #     user_id = models.CharField(max_length=20)
