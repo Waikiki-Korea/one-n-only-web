@@ -4,10 +4,10 @@ import numpy as np
 from os import listdir
 from os.path import isfile, join
 import datetime as pydatetime
-from ono.models import Token, Crawled
+from ono.models import Token, Crawled, TempUrl
 
-def testComparison(ipfs_path):
-    print("[testComparison] ipfs_path = ", ipfs_path)
+def testComparison(file_path):
+    print("[testComparison] file_path = ", file_path)
     time_start = pydatetime.datetime.now()
 
     '''
@@ -21,6 +21,12 @@ def testComparison(ipfs_path):
     crawledItem.ipfs_path # 저장되어있는 ipfs_path 에 접근
     # Crawled data의 항목들은 waikiki/ono/models.py 의 class Crawled(models.Model) 참조
     '''
+
+    # 2022-05-18 / 이렇게 쓰세요
+    temp_url_list = list(TempUrl.objects.all())
+    print(temp_url_list[0].ipfs_path)
+
+
     similarity = 99.999
 
     time_finish = pydatetime.datetime.now()

@@ -1,0 +1,44 @@
+{% extends 'ono/base.html' %}
+{% load static %}
+{% block content %}
+<script>
+    $(document).ready(function () {
+        $.getScript("{% static 'js/ono-0.1.0.js' %}", function () {
+        });
+    });
+
+    function submit_loading() {
+        $("#submit_button").addClass('loading');
+    }
+</script>
+
+<div class="ui stackable four column centered grid" style="margin:auto;">
+    <div class="two column centered row">
+        <div class="column" style="padding-top:25px;">
+            <form class="ui form" action="{% url 'ono:test_image' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="field">
+                    <label>Image</label>
+                    <input type="file" name="test_image" id="test_image" accept="image/*" multiple>
+                </div>
+
+                <div align="right">
+                    <button class="ui blue submit button" type="submit" id="submit_button"
+                        onClick="submit_loading()">Submit</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="ui divider"></div>
+
+    </div>
+    <div class="one column centered row">
+        <div class="right aligned column">
+            <a href="https://github.com/waikiki-korea" target="_blank"><img
+                    src="{% static 'img/GitHub-Mark-64px.png' %}" style="width:25px;"></a>
+            <p>Copyright &copy; 2022 <b>Team Waikiki</b> all rights reserved.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

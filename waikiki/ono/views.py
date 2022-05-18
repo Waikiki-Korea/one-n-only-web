@@ -3,9 +3,11 @@ from django.shortcuts import render, get_object_or_404, get_list_or_404
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.http import Http404
-from ono.models import Collection, OnoUser, Token
+from ono.models import Collection, OnoUser, Token, TempImage
 from django.contrib.auth import get_user_model
 from ono.modules.ono_engine.test import testComparison
+from ono.modules.ono_utils.ono_utils import removeFile
+import os
 
 # Create your views here.
 def index(request):
@@ -100,6 +102,47 @@ def mint(request, _user_id):
         # get_object_or_404(Collection, user_id=_user_id)
         # print("[ collections ] ", collections)
         return render(request, 'ono/mint.html')
+
+    return render(request, 'ono/result.html', response)
+
+def test_image(request):
+    print("[", request.method, "], test/image")
+
+    response = {
+        "result":"failed",
+        "reason":"<TBD>"
+    }
+    if request.method == 'POST':
+        print('[ Request ] ', request)
+
+        tempImage = TempImage()
+
+        for img in request.FILES.getlist('test_image'):
+            tempImage.image = img
+            break;
+        tempImage.save()
+
+        # 이미지 판단 시작 [
+        image_response = testComparison(os.path.join(os.getcwd() + "/media/" + str(tempImage.image)))
+        print("[image_response] ", image_response)
+
+        '''
+        <TBD>
+        response 판단 후, 유사도 판단에 따라 등록 여부를 결정.
+        '''
+        # 이미지 판단 끝 ]
+        removeFile("/media/", str(tempImage.image))
+        tempImage.delete() # delete column from table
+
+        response = {
+            "result":"successful",
+            "reason":"OK",
+            "similarity": image_response['similarity']
+        }
+
+    else:
+        print('..')
+        return render(request, 'ono/test_image.html')
 
     return render(request, 'ono/result.html', response)
 
