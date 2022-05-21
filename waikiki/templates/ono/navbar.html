@@ -8,9 +8,6 @@
         <a class="item" href="{% url 'ono:mint' user.id %}">
             Mint
         </a>
-        <a class="item" href="{% url 'ono:test_image' %}">
-            Test image
-        </a>
         {% else %}
         <a class="item" href="{% url 'common:login' %}">
             Collection
@@ -19,6 +16,9 @@
             Mint
         </a>
         {% endif %}
+        <a class="item" href="{% url 'ono:test_image' %}">
+            Test image
+        </a>
         <div class="right menu">
             {% if user.is_authenticated %}
                 <a class="item" href="{% url 'common:update' pk=user.id %}">{{ user.username }}</a>
