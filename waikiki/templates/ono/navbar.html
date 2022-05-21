@@ -1,15 +1,29 @@
-<div class="ui container" style="padding-top:10px;">
+<div class="ui container right aligned" style="padding-top:5px;">
+
+    <form class="ui form" action="{% url 'ono:search' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="ui input" style="margin-right:40px;">
+            <input type="text" name="search" id="search" placeholder="Search..."
+                value="{{ form.search.value|default_if_none:'' }}" style="margin-right:2px;">
+            <button class="ui submit blue icon button" type="submit" id="submit_button"><i
+                    class="icon search"></i></button>
+        </div>
+    </form>
+
+</div>
+
+<div class="ui container" style="padding-top:5px;">
     <div class="ui menu" style="height:55px;background-color:#8BD8BD;">
         <a class="header item" href="/" style="color:#243665;background-color:#8BD8BD;">One-n-Only</a>
         {% if user.is_authenticated %}
+        <a class="item" href="{% url 'ono:dashboard' user.id %}">
+            Dashboard
+        </a>
         <a class="item" href="{% url 'ono:collection' user.id %}">
             Collection
         </a>
         <a class="item" href="{% url 'ono:mint' user.id %}">
             Mint
-        </a>
-        <a class="item" href="{% url 'ono:test_image' %}">
-            Test image
         </a>
         {% else %}
         <a class="item" href="{% url 'common:login' %}">
@@ -19,13 +33,16 @@
             Mint
         </a>
         {% endif %}
+        <a class="item" href="{% url 'ono:test_image' %}">
+            Test image
+        </a>
         <div class="right menu">
             {% if user.is_authenticated %}
-                <a class="item" href="{% url 'common:update' pk=user.id %}">{{ user.username }}</a>
-                <a class="item ui red label" href="{% url 'common:logout' %}">Sign out</a>
+            <a class="item" href="{% url 'common:update' pk=user.id %}">{{ user.username }}</a>
+            <a class="item ui red label" href="{% url 'common:logout' %}">Sign out</a>
             {% else %}
-                <a class="item" href="{% url 'common:login' %}">Sign in</a>
-                <a class="item" href="{% url 'common:signup' %}">Sign up</a>
+            <a class="item" href="{% url 'common:login' %}">Sign in</a>
+            <a class="item" href="{% url 'common:signup' %}">Sign up</a>
             {% endif %}
         </div>
     </div>

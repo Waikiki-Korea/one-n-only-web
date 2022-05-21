@@ -1,0 +1,136 @@
+{% extends 'ono/base.html' %}
+{% load static %}
+{% block content %}
+
+<script>
+    $(document).ready(function () {
+        $.getScript("{% static 'js/ono-0.1.0.js' %}", function () {
+        });
+    });
+
+    function submit_loading() {
+        $("#submit_button").addClass('loading');
+    }
+
+    function copyToClipboard(element) {
+        var $temp = $("<input>");
+        $("body").append($temp);
+        $temp.val($(element).text()).select();
+        document.execCommand("copy");
+        $temp.remove();
+    }
+
+</script>
+
+{% if user.is_authenticated %}
+
+<div class="ui column container">
+    <div id="container_profile" class="ui grid doubling stackable container" style="padding: 1em 0em 0em 0em;">
+        <div id="container_profile" class="four wide column">
+            <div id="profile_name" class="ui top attached header inverted teal segment"
+                style="border:1px solid #00d6a5;background-color:#00d6a5;">
+                Profile
+            </div>
+            <div id="segment_profile" class="ui attached stacked bottom segment">
+                <div class="ui grid doubling stackable container" style="padding: 0.5em 0em 0em 0em;">
+                    <div class="eight wide column" style="padding:0;">
+                        <img id="profile_img" class="ui circular image" src="/media/{{user.symbol}}" width="100%">
+                    </div>
+                    <div id="profile_profiles" class="eight wide column" style="padding-left:4px;">
+                        {{ user.username }}<br />
+                        {{ user.first_name }}<br />
+                        {{ user.last_name }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="container_main" class="twelve wide column">
+
+            <div id="eth_address_top" class="ui top attached header inverted brown segment"
+                style="border:1px solid #00d6a5;background-color:#00d6a5;">
+                My Ethereum Address
+            </div>
+            <div id="eth_address_bottom" class="ui attached stacked bottom segment">
+                <span id="my_eth_address">{{ user.eth_address }}</span> <a onclick="copyToClipboard('#my_eth_address')"
+                    style="cursor: pointer;"><i class="copy outline icon"></i></a>
+            </div>
+
+            <div id="my_collections_top" class="ui top attached header inverted brown segment"
+                style="border:1px solid #00d6a5;background-color:#00d6a5;">
+                My Collections
+            </div>
+            <div id="my_collections_bottom" class="ui attached stacked bottom segment">
+                <div class="ui grid stackable container">
+                    {% for collection in collections.all %}
+                    <div id="container_main" class="eight wide column">
+                        <div id="my_collections_top" class="ui top attached header inverted black segment"
+                            style="border:1px solid #00d6a5;background-color:#00d6a5;">
+                            {{ collection.title }}
+                        </div>
+                        <div id="my_collections_bottom" class="ui attached stacked bottom segment">
+                            <div class="ui small header">Symbol</div>
+                            <img id="profile_img" class="ui rounded small image" src="/media/{{collection.symbol}}"
+                                width="100%">
+                            <div class="ui small header">Contract Address</div>
+                            {{ collection.contract_address }}
+                            <div class="ui small header">Token Size</div>
+                            {{ collection.token_size }}
+                            <div class="ui small header">Description</div>
+                            {{ collection.description }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+            <div id="my_tokens_top" class="ui top attached header inverted brown segment"
+                style="border:1px solid #00d6a5;background-color:#00d6a5;">
+                My Tokens
+            </div>
+            <div id="my_tokens_bottom" class="ui attached stacked bottom segment">
+                {% for token in tokens.all %}
+                <div id="container_main" class="eight wide column">
+                    <div id="my_tokens_top" class="ui top attached header inverted black segment"
+                        style="border:1px solid #00d6a5;background-color:#00d6a5;">
+                        {{ token.id }}
+                    </div>
+                    <div id="my_tokens_bottom" class="ui attached stacked bottom segment">
+                        <div class="ui small header">Title</div>
+                        {{ token.title }}
+                        <div class="ui small header">IPFS Path</div>
+                        {{ token.ipfs_path }}
+                        <div class="ui small header">Description</div>
+                        {{ token.description }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% else %}
+<div class="ui column container">
+    <div class="ui raised very segment" style="margin-top:25px;margin-bottom:25px;">
+        <br><br>
+        <h1 class="ui header centered">One n Only</h2>
+            <br><br>
+    </div>
+</div>
+{% endif %}
+
+<div class="ui divider"></div>
+
+<div class="ui stackable four column centered grid" style="margin:auto;">
+    <div class="one column centered row">
+        <div class="right aligned column">
+            <a href="https://github.com/waikiki-korea" target="_blank"><img
+                    src="{% static 'img/GitHub-Mark-64px.png' %}" style="width:25px;"></a>
+            <p>Copyright &copy; 2022 <b>Team Waikiki</b> all rights reserved.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

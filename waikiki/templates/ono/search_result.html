@@ -1,0 +1,32 @@
+{% extends 'ono/base.html' %}
+{% load static %}
+{% block content %}
+<script>
+    $(document).ready(function () {
+        $.getScript("{% static 'js/ono-0.1.0.js' %}", function () {
+
+        });
+    });
+</script>
+
+<div class="ui stackable four column centered grid" style="margin:auto;">
+    <div class="two column centered row">
+        <div class="column" style="padding:50px 0 20px 0;">
+            <div class="ui message" id="result_box">
+                <div class="header">
+                    You have requested search "{{ search_text }}".
+                </div>
+                <p>{{ result }}</p>
+            </div>
+            
+        </div>
+
+        <div class="ui divider"></div>
+        <div class="right aligned column">
+            <a href="https://github.com/waikiki-korea" target="_blank"><img
+                    src="{% static 'img/GitHub-Mark-64px.png' %}" style="width:25px;"></a>
+            <p>Copyright &copy; 2022 <b>Team Waikiki</b> all rights reserved.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
