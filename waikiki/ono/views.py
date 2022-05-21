@@ -1,11 +1,12 @@
 import json
-from django.shortcuts import render, get_object_or_404, get_list_or_404
+from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.http import Http404
 from ono.models import Collection, OnoUser, Token, TempImage
 from django.contrib.auth import get_user_model
 from ono.modules.ono_engine.test import testComparison
+from ono.modules.ono_web3.test import testSearch
 from ono.modules.ono_utils.ono_utils import removeFile
 import os
 
@@ -21,6 +22,22 @@ def dashboard(request, user_id):
     tokens = Token.objects.all()
 
     return render(request, 'ono/dashboard.html', {'collections': collections, 'tokens': tokens})
+
+def search(request):
+    print("[", request.method, "], /search")
+
+    if request.method == 'POST':
+        print("search requested = ", request.POST['search'])
+
+        response = {
+            "search_text": request.POST['search'],
+            "result": testSearch(request.POST['search'])
+        }
+
+    else:
+        return redirect('../')
+   
+    return render(request, 'ono/search_result.html', response)
 
 def collection(request, user_id):
     print("[", request.method, "], /", user_id, "/collection")
