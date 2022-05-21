@@ -11,14 +11,16 @@ import os
 
 # Create your views here.
 def index(request):
-    # return HttpResponse("Hello, world. You're at the index.")
-### [DELETE THIS][TESTCODE][S] {
-    # printTest("aaaaaaaaa")
-### [DELETE THIS][TESTCODE][E] }
     collections = Collection.objects.all()
     tokens = Token.objects.all()
 
     return render(request, 'ono/index.html', {'collections': collections, 'tokens': tokens})
+
+def dashboard(request, user_id):
+    collections = Collection.objects.all()
+    tokens = Token.objects.all()
+
+    return render(request, 'ono/dashboard.html', {'collections': collections, 'tokens': tokens})
 
 def collection(request, user_id):
     print("[", request.method, "], /", user_id, "/collection")

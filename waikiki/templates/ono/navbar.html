@@ -1,7 +1,10 @@
-<div class="ui container" style="padding-top:10px;">
+<div class="ui container" style="padding-top:5px;">
     <div class="ui menu" style="height:55px;background-color:#8BD8BD;">
         <a class="header item" href="/" style="color:#243665;background-color:#8BD8BD;">One-n-Only</a>
         {% if user.is_authenticated %}
+        <a class="item" href="{% url 'ono:dashboard' user.id %}">
+            Dashboard
+        </a>
         <a class="item" href="{% url 'ono:collection' user.id %}">
             Collection
         </a>
