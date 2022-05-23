@@ -23,6 +23,7 @@ class Collection(models.Model):
     media_type = models.PositiveIntegerField()
     contract_address = models.TextField(blank=True)
     description = models.TextField(blank=True)
+    owner_address = models.TextField(blank=True, null=True)
     created_date = models.DateTimeField('date created', auto_now_add=True)
     updated_date = models.DateTimeField('date updated', auto_now=True)
 
@@ -40,6 +41,8 @@ class Token(models.Model):
     sha256_hash = models.TextField(blank=True)
     description = models.TextField(blank=True)
     owner = models.CharField(max_length=255, blank=True)
+    owner_id = models.BigIntegerField(null=True)
+    owner_address = models.TextField(blank=True)
     created_date = models.DateTimeField('date created', auto_now_add=True)
     updated_date = models.DateTimeField('date updated', auto_now=True)
 
