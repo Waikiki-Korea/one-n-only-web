@@ -31,6 +31,9 @@
                         Similarity
                     </div>
                     <p>{{ similarity }}</p>
+                    {% if duration %}
+                    <p>Execution time : {{ duration }}</p>
+                    {% endif %}
                 </div>
             </div>
             {% endif %}
