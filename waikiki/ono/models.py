@@ -45,6 +45,7 @@ class Token(models.Model):
     owner_address = models.TextField(blank=True)
     created_date = models.DateTimeField('date created', auto_now_add=True)
     updated_date = models.DateTimeField('date updated', auto_now=True)
+    token_image = models.ImageField(upload_to='collection/tokens/', blank=True, null=True, default='white-image.png')
 
     def __str__(self):
         return "[token] id: " + str(self.id) + ", image: " + str(self.ipfs_path)
@@ -72,6 +73,7 @@ class Crawled(models.Model):
     created_date = models.DateTimeField('date created', auto_now_add=True)
     updated_date = models.DateTimeField('date updated', auto_now=True)
     blockchain = models.PositiveIntegerField()
+    owner_address = models.TextField(blank=True)
 
 class TempUrl(models.Model):
     id = models.BigAutoField(primary_key=True)

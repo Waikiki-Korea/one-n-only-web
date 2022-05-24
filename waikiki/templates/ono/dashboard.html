@@ -97,10 +97,13 @@
                         {{ token.id }}
                     </div>
                     <div id="my_tokens_bottom" class="ui attached stacked bottom segment">
+                        <div class="ui small header">Media</div>
+                        <img id="token_img" class="ui rounded tiny image" src="{{token.ipfs_path}}"
+                            width="100%">
                         <div class="ui small header">Title</div>
                         {{ token.title }}
                         <div class="ui small header">IPFS Path</div>
-                        {{ token.ipfs_path }}
+                        <a href="{{ token.ipfs_path }}" target="_blank">{{ token.ipfs_path }}</a>
                         <div class="ui small header">Description</div>
                         {{ token.description }}
                     </div>

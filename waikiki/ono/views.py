@@ -9,19 +9,24 @@ from ono.modules.ono_engine.test import testComparison
 from ono.modules.ono_web3.test import testSearch
 from ono.modules.ono_utils.ono_utils import removeFile
 import os
+import ipfsApi
 
 # Create your views here.
+
+
 def index(request):
     collections = Collection.objects.all()
     tokens = Token.objects.all()
 
     return render(request, 'ono/index.html', {'collections': collections, 'tokens': tokens})
 
+
 def dashboard(request, user_id):
     collections = Collection.objects.all()
     tokens = Token.objects.all()
 
     return render(request, 'ono/dashboard.html', {'collections': collections, 'tokens': tokens})
+
 
 def search(request):
     print("[", request.method, "], /search")
@@ -36,15 +41,16 @@ def search(request):
 
     else:
         return redirect('../')
-   
+
     return render(request, 'ono/search_result.html', response)
+
 
 def collection(request, user_id):
     print("[", request.method, "], /", user_id, "/collection")
 
     response = {
-        "result":"failed",
-        "reason":"<TBD>"
+        "result": "failed",
+        "reason": "<TBD>"
     }
     if request.method == 'POST':
         print('[ Request ] ', request)
@@ -53,11 +59,11 @@ def collection(request, user_id):
         # id, user_id, title, symbol, blockchain, token_size, media_type, contract_address, description, create_date, updated_date
         onoUser = get_object_or_404(OnoUser, pk=user_id)
 
-        collection.user_id = onoUser;
+        collection.user_id = onoUser
         collection.title = request.POST['title']
         for img in request.FILES.getlist('symbol'):
             collection.symbol = img
-            break;
+            break
         collection.blockchain = request.POST['blockchain']
         collection.token_size = request.POST['token_size']
         collection.media_type = request.POST['media_type']
@@ -67,8 +73,8 @@ def collection(request, user_id):
         collection.save()
 
         response = {
-            "result":"successful",
-            "reason":"OK"
+            "result": "successful",
+            "reason": "OK"
         }
 
     else:
@@ -77,12 +83,13 @@ def collection(request, user_id):
 
     return render(request, 'ono/result.html', response)
 
+
 def mint(request, _user_id):
     print("[", request.method, "], /", _user_id, "/mint")
 
     response = {
-        "result":"failed",
-        "reason":"<TBD>"
+        "result": "failed",
+        "reason": "<TBD>"
     }
     if request.method == 'POST':
         print('[ Request ] ', request)
@@ -94,26 +101,53 @@ def mint(request, _user_id):
         token.collection_id = collections[int(request.POST['collection_id'])]
         token.title = request.POST['title']
         token.media_type = request.POST['media_type']
-        token.ipfs_path = request.POST['ipfs_path']
-        token.token_path = request.POST['token_path']
-        token.sha256_hash = request.POST['sha256_hash']
+        # token.ipfs_path = request.POST['ipfs_path']
+        # token.token_path = request.POST['token_path']
+        # token.sha256_hash = request.POST['sha256_hash']
         token.description = request.POST['description']
-        token.owner = request.POST['owner']
+        # token.owner = request.POST['owner']
+        for img in request.FILES.getlist('token_image'):
+            token.token_image = img
+            break
 
         # 이미지 판단 시작 [
-        image_response = testComparison(token.ipfs_path)
+        tempImage = TempImage()
+        tempImage.image = token.token_image
+        tempImage.save()
+
+        image_response = testComparison(os.path.join(
+            os.getcwd() + "/media/" + str(tempImage.image)))
         print("[image_response] ", image_response)
+
+        # 유사도 판단
+        if image_response['similarity'] < 99:
+            print("[similarity] This is not a scam. Store item into DB.")
+            api = ipfsApi.Client('127.0.0.1', 5001)
+            res = api.add(os.path.join(
+            os.getcwd() + "/media/" + str(tempImage.image)))
+            print("[IPFS RES] ", res[0]['Hash'])
+            token.ipfs_path = "http://localhost:8080/ipfs/" + str(res[0]['Hash'])
+            token.save()
+            response = {
+                "result": "successful",
+                "reason": "OK",
+                "similarity": image_response['similarity'],
+                "duration": image_response['duration']
+            }
+        else:
+            print("[similarity] This is a scam!!!")
+            response = {
+                "result": "failed",
+                "reason": "Similarity is so high.",
+                "similarity": image_response['similarity'],
+                "duration": image_response['duration']
+            }
+
         '''
         <TBD>
         response 판단 후, 유사도 판단에 따라 등록 여부를 결정.
         '''
         # 이미지 판단 끝 ]
-        token.save()
-
-        response = {
-            "result":"successful",
-            "reason":"OK"
-        }
 
     else:
         print('..')
@@ -124,12 +158,13 @@ def mint(request, _user_id):
 
     return render(request, 'ono/result.html', response)
 
+
 def test_image(request):
     print("[", request.method, "], test/image")
 
     response = {
-        "result":"failed",
-        "reason":"<TBD>"
+        "result": "failed",
+        "reason": "<TBD>"
     }
     if request.method == 'POST':
         print('[ Request ] ', request)
@@ -138,11 +173,12 @@ def test_image(request):
 
         for img in request.FILES.getlist('test_image'):
             tempImage.image = img
-            break;
+            break
         tempImage.save()
 
         # 이미지 판단 시작 [
-        image_response = testComparison(os.path.join(os.getcwd() + "/media/" + str(tempImage.image)))
+        image_response = testComparison(os.path.join(
+            os.getcwd() + "/media/" + str(tempImage.image)))
         print("[image_response] ", image_response)
 
         '''
@@ -151,12 +187,13 @@ def test_image(request):
         '''
         # 이미지 판단 끝 ]
         removeFile("/media/", str(tempImage.image))
-        tempImage.delete() # delete column from table
+        tempImage.delete()  # delete column from table
 
         response = {
-            "result":"successful",
-            "reason":"OK",
-            "similarity": image_response['similarity']
+            "result": "successful",
+            "reason": "OK",
+            "similarity": image_response['similarity'],
+            "duration": image_response['duration']
         }
 
     else:
@@ -164,6 +201,7 @@ def test_image(request):
         return render(request, 'ono/test_image.html')
 
     return render(request, 'ono/result.html', response)
+
 
 def test_minting(request):
     print("[", request.method, "], /test/minting")
@@ -183,15 +221,15 @@ def test_minting(request):
         # ti.save()
 
         response = {
-            "result":"successful",
-            "reason":"OK"
+            "result": "successful",
+            "reason": "OK"
         }
 
         # return HttpResponse(json.dumps(response), content_type = "application/json")
     else:
         response = {
-            "result":"failed",
-            "reason":"Request method is GET"
+            "result": "failed",
+            "reason": "Request method is GET"
         }
 
         # return HttpResponse(json.dumps(response), content_type = "application/json")
