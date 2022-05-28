@@ -8,16 +8,22 @@ from django.contrib.postgres.fields import ArrayField
 # parent : default user
 ### id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, data_joined
 # Ref. https://chagokx2.tistory.com/60
+
+
 class OnoUser(AbstractUser):
     eth_address = models.CharField(max_length=255)
-    collection_ids = ArrayField(models.IntegerField(null=True, blank=True), null=True, blank=True)
-    symbol = models.ImageField(upload_to='user/symbol/', blank=True, null=True, default='white-image.png') # default='album_logos/no-image.jpg')
+    collection_ids = ArrayField(models.IntegerField(
+        null=True, blank=True), null=True, blank=True)
+    symbol = models.ImageField(upload_to='user/symbol/', blank=True, null=True,
+                               default='white-image.png')  # default='album_logos/no-image.jpg')
+
 
 class Collection(models.Model):
     id = models.BigAutoField(primary_key=True)
     user_id = models.ForeignKey(OnoUser, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
-    symbol = models.ImageField(upload_to='collection/symbol/', blank=True, null=True, default='white-image.png')
+    symbol = models.ImageField(
+        upload_to='collection/symbol/', blank=True, null=True, default='white-image.png')
     blockchain = models.PositiveIntegerField()
     token_size = models.PositiveIntegerField()
     media_type = models.PositiveIntegerField()
@@ -30,6 +36,13 @@ class Collection(models.Model):
     def __str__(self):
         return "[collection] id: " + str(self.id) + ", title: " + self.title
 
+
+class Abi(models.Model):
+    id = models.OneToOneField(Collection, primary_key=True, on_delete=models.CASCADE)
+    abi = models.TextField(blank=True)
+
+    def __str__(self):
+        return "[collection] id: " + str(self.id)
 
 class Token(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -45,7 +58,8 @@ class Token(models.Model):
     owner_address = models.TextField(blank=True)
     created_date = models.DateTimeField('date created', auto_now_add=True)
     updated_date = models.DateTimeField('date updated', auto_now=True)
-    token_image = models.ImageField(upload_to='collection/tokens/', blank=True, null=True, default='white-image.png')
+    token_image = models.ImageField(
+        upload_to='collection/tokens/', blank=True, null=True, default='white-image.png')
 
     def __str__(self):
         return "[token] id: " + str(self.id) + ", image: " + str(self.ipfs_path)
@@ -57,6 +71,7 @@ class TempImage(models.Model):
 
     def __str__(self):
         return "[temp image] id: " + str(self.id) + ", image: " + str(self.image)
+
 
 class Crawled(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -74,6 +89,7 @@ class Crawled(models.Model):
     updated_date = models.DateTimeField('date updated', auto_now=True)
     blockchain = models.PositiveIntegerField()
     owner_address = models.TextField(blank=True)
+
 
 class TempUrl(models.Model):
     id = models.BigAutoField(primary_key=True)

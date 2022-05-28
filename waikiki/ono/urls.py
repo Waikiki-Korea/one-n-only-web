@@ -12,4 +12,7 @@ urlpatterns = [
     path('search/', views.search, name='search'),
     path('test/image/', views.test_image, name="test_image"),
     path('test/minting/', views.test_minting, name="test_minting"),
+    path('test/makecontract/', views.make_contract, name="make_contract"),
+    path('test/maketoken/', views.make_token, name="make_token")
+
 ]

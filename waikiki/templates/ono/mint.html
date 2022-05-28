@@ -8,7 +8,8 @@
     });
 
     function submit_loading() {
-        $("#submit_button").addClass('loading');
+        alert('a');
+        $("#mint_submit_button").addClass('loading');
     }
 </script>
 
@@ -25,6 +26,10 @@
                 <div class="field">
                     <label>User Name</label>
                     <input type="text" name="user_name" placeholder="User Name" value="{{ user.username }}" disabled>
+                </div>
+                <div class="field">
+                    <label>Private Key</label>
+                    <input type="text" name="private_key" placeholder="Private Key">
                 </div>
                 <div class="field">
                     <label>Blockchain (1: ETH)</label>
@@ -67,7 +72,7 @@
                     <input type="file" name="token_image" id="token_image" accept="image/*" multiple>
                 </div>
                 <div align="right">
-                    <button class="ui blue submit button" type="submit" id="submit_button"
+                    <button class="ui blue submit button" type="submit" id="mint_submit_button"
                         onClick="submit_loading()">Submit</button>
                 </div>
             </form>
