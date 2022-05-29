@@ -35,7 +35,8 @@ def testComparison(file_path):
     options = webdriver.ChromeOptions()
     options.add_argument("headless")
 
-    dr = webdriver.Chrome(cur_path+'/chromedriver', options=options) #chromedriver.exe 설치 경로
+    # dr = webdriver.Chrome(cur_path+'/chromedriver', options=options) #(linux)chromedriver 설치 경로
+    dr = webdriver.Chrome(cur_path+'/chromedriver.exe', options=options) #(windows)chromedriver.exe 설치 경로
 
     temp_url_list = list(TempUrl.objects.all())
 

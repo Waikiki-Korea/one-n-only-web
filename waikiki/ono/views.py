@@ -3,15 +3,13 @@ from django.shortcuts import render, get_object_or_404, get_list_or_404, redirec
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.http import Http404
-from ono.models import Collection, OnoUser, Token, TempImage
+from ono.models import Collection, OnoUser, Token, TempImage, Abi
 from django.contrib.auth import get_user_model
 from ono.modules.ono_engine.test import testComparison
-from ono.modules.ono_web3.test import testSearch
+from ono.modules.ono_web3.nft_contract import testSearch, create_nft_contract, mint_item
 from ono.modules.ono_utils.ono_utils import removeFile
 import os
 import ipfsApi
-
-# Create your views here.
 
 
 def index(request):
@@ -55,10 +53,10 @@ def collection(request, user_id):
     if request.method == 'POST':
         print('[ Request ] ', request)
 
-        collection = Collection()
         # id, user_id, title, symbol, blockchain, token_size, media_type, contract_address, description, create_date, updated_date
         onoUser = get_object_or_404(OnoUser, pk=user_id)
 
+        collection = Collection()
         collection.user_id = onoUser
         collection.title = request.POST['title']
         for img in request.FILES.getlist('symbol'):
@@ -67,10 +65,20 @@ def collection(request, user_id):
         collection.blockchain = request.POST['blockchain']
         collection.token_size = request.POST['token_size']
         collection.media_type = request.POST['media_type']
-        collection.contract_address = request.POST['contract_address']
         collection.description = request.POST['description']
-
+        r = create_nft_contract(
+            onoUser.eth_address,
+            request.POST['private_key'],
+            collection.title,
+            "symbol"
+        )
+        collection.contract_address = r['contract_address']
         collection.save()
+
+        abi = Abi()
+        abi.id = collection
+        abi.abi = json.dumps(r['abi'])
+        abi.save()
 
         response = {
             "result": "successful",
@@ -94,11 +102,18 @@ def mint(request, _user_id):
     if request.method == 'POST':
         print('[ Request ] ', request)
 
-        token = Token()
         # id, collection_id, title, media_type, ipfs_path, token_path, sha256_hash, description, owner, created_date, updated_date
-        collections = get_list_or_404(Collection, user_id=_user_id)
+        # collections = get_list_or_404(Collection, user_id=_user_id)
+        collection = get_object_or_404(
+            Collection, pk=int(request.POST['collection_id']))
 
-        token.collection_id = collections[int(request.POST['collection_id'])]
+        token = Token()
+        # token.collection_id = collections[int(request.POST['collection_id'])]
+        token.collection_id = collection
+
+        onoUser = get_object_or_404(OnoUser, pk=_user_id)
+        # onoUser = get_object_or_404(OnoUser, pk=token.collection_id.user_id)
+
         token.title = request.POST['title']
         token.media_type = request.POST['media_type']
         # token.ipfs_path = request.POST['ipfs_path']
@@ -124,10 +139,23 @@ def mint(request, _user_id):
             print("[similarity] This is not a scam. Store item into DB.")
             api = ipfsApi.Client('127.0.0.1', 5001)
             res = api.add(os.path.join(
-            os.getcwd() + "/media/" + str(tempImage.image)))
+                os.getcwd() + "/media/" + str(tempImage.image)))
             print("[IPFS RES] ", res[0]['Hash'])
-            token.ipfs_path = "http://localhost:8080/ipfs/" + str(res[0]['Hash'])
+            token.ipfs_path = "http://localhost:8080/ipfs/" + \
+                str(res[0]['Hash'])
             token.save()
+
+            abi = get_object_or_404(Abi, pk=token.collection_id)
+            r = mint_item(onoUser.eth_address,
+                          request.POST['private_key'],
+                          token.collection_id.contract_address,
+                          abi.abi,
+                          onoUser.eth_address,
+                          token.id,
+                          token.ipfs_path)
+
+            
+
             response = {
                 "result": "successful",
                 "reason": "OK",
@@ -142,11 +170,6 @@ def mint(request, _user_id):
                 "similarity": image_response['similarity'],
                 "duration": image_response['duration']
             }
-
-        '''
-        <TBD>
-        response 판단 후, 유사도 판단에 따라 등록 여부를 결정.
-        '''
         # 이미지 판단 끝 ]
 
     else:
@@ -237,3 +260,29 @@ def test_minting(request):
     return render(request, 'ono/result.html', response)
     # raise Http404("Oops!...")
     # return HttpResponse(response)
+
+
+def make_contract(request):
+    print("[", request.method, "], /test/makecontract")
+
+    # if request.method == 'POST':
+    response = {
+        "search_text": "",
+        "result": create_nft_contract()
+    }
+
+    # else:
+    #     return redirect('../')
+
+    return render(request, 'ono/search_result.html', response)
+
+
+def make_token(request):
+    print("[", request.method, "], /test/maketoken")
+
+    response = {
+        "search_text": "",
+        "result": mint_item()
+    }
+
+    return render(request, 'ono/search_result.html', response)
