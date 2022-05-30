@@ -52,8 +52,9 @@
                 My Ethereum Address
             </div>
             <div id="eth_address_bottom" class="ui attached stacked bottom segment">
-                <span id="my_eth_address" class="ui label big">{{ user.eth_address }}</span> <a onclick="copyToClipboard('#my_eth_address')"
-                    style="cursor: pointer;"><i class="copy outline icon"></i></a>
+                <span id="my_eth_address" class="ui label big">{{ user.eth_address }}</span> <a
+                    onclick="copyToClipboard('#my_eth_address')" style="cursor: pointer;"><i
+                        class="copy outline icon"></i></a>
             </div>
 
             <div id="my_collections_top" class="ui top attached header inverted brown segment"
@@ -104,14 +105,25 @@
                         {{ token.id }}
                     </div>
                     <div id="my_tokens_bottom" class="ui attached stacked bottom segment">
-                        <div class="ui small header">Media</div>
-                        <img id="token_img" class="ui rounded tiny image" src="{{token.ipfs_path}}" width="100%">
-                        <div class="ui small header">Title</div>
-                        {{ token.title }}
-                        <div class="ui small header">IPFS Path</div>
-                        <a href="{{ token.ipfs_path }}" target="_blank">{{ token.ipfs_path }}</a>
-                        <div class="ui small header">Description</div>
-                        {{ token.description }}
+                        <div class="ui horizontal segments">
+                            <div class="ui segment">
+                                <img id="token_img" class="ui rounded medium image" src="{{token.ipfs_path}}"
+                                    width="100%">
+                            </div>
+                            <div class="ui segment" style="white-space: nowrap;overflow:hidden;text-overflow:ellipsis;">
+                                <div class="ui small header">Collection</div>
+                                {{ token.collection_id.title }}
+                                <div class="ui small header">Title</div>
+                                {{ token.title }}
+                                <div class="ui small header">IPFS Path</div>
+                                <a href="{{ token.ipfs_path }}" target="_blank">{{ token.ipfs_path }}</a>
+                                <div class="ui small header">Description</div>
+                                {{ token.description }}
+                                <div class="ui small header">Owner</div>
+                                {{ token.owner_address }}
+                            </div>
+                        </div>
+
                     </div>
                 </div>
                 {% endfor %}

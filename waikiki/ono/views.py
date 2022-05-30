@@ -126,6 +126,7 @@ def mint(request, _user_id):
         # token.sha256_hash = request.POST['sha256_hash']
         token.description = request.POST['description']
         # token.owner = request.POST['owner']
+        token.owner_address = onoUser.eth_address
         for img in request.FILES.getlist('token_image'):
             token.token_image = img
             break

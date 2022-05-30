@@ -35,6 +35,9 @@
             Collections
         </div>
         <div id="my_collections_bottom" class="ui attached stacked bottom segment">
+            {% if collections == null %}
+            <div class="ui grey label">EMPTY</div>
+            {% else %}
             <div class="ui grid stackable container">
                 {% for collection in collections.all %}
                 <div id="container_main" class="eight wide column">
@@ -59,7 +62,7 @@
                 </div>
                 {% endfor %}
             </div>
-
+            {% endif %}
         </div>
 
         <div id="tokens_top" class="ui top attached header inverted brown segment"
@@ -67,6 +70,9 @@
             Tokens
         </div>
         <div id="my_tokens_bottom" class="ui attached stacked bottom segment">
+            {% if tokens == null %}
+            <div class="ui grey label">EMPTY</div>
+            {% else %}
             {% for token in tokens.all %}
             <div id="container_main" class="eight wide column">
                 <div id="tokens_top" class="ui top attached header inverted black segment"
@@ -74,26 +80,36 @@
                     {{ token.id }}
                 </div>
                 <div id="my_tokens_bottom" class="ui attached stacked bottom segment">
-                    <div class="ui small header">Media</div>
-                    {% if token.ipfs_path|first in 'http' %}
-                    <img class="ui tiny rounded image" src="{{ token.ipfs_path }}">
-                    {% elif token.ipfs_path == '' %}
-                    <img id="profile_img" class="ui rounded small image" src="/media/white-image.png">
-                    {% else %}
-                    <img class="ui tiny rounded image" src="https://ipfs.io/ipfs/{{ token.ipfs_path }}">
-                    {% endif %}
-                    <div class="ui small header">Title</div>
-                    {{ token.title }}
-                    <div class="ui small header">IPFS Path</div>
-                    {{ token.ipfs_path }}
-                    <div class="ui small header">Description</div>
-                    {{ token.description }}
-                    <div class="ui small header">Collection</div>
-                    {{ token.collection_id.title }}
+                    <div class="ui horizontal segments">
+                        <div class="ui segment">
+                            {% if token.ipfs_path|first in 'http' %}
+                            <img class="ui medium rounded image" src="{{ token.ipfs_path }}">
+                            {% elif token.ipfs_path == '' %}
+                            <img class="ui medium rounded image" src="/media/white-image.png">
+                            {% else %}
+                            <img class="ui medium rounded image" src="https://ipfs.io/ipfs/{{ token.ipfs_path }}">
+                            {% endif %}
+
+                        </div>
+                        <div class="ui segment" style="white-space: nowrap;overflow:hidden;text-overflow:ellipsis;">
+                            <div class="ui small header">Collection</div>
+                            {{ token.collection_id.title }}
+                            <div class="ui small header">Title</div>
+                            {{ token.title }}
+                            <div class="ui small header">IPFS Path</div>
+                            <a href="{{ token.ipfs_path }}" target="_blank">{{ token.ipfs_path }}</a>
+                            <div class="ui small header">Description</div>
+                            {{ token.description }}
+                            <div class="ui small header">Owner</div>
+                            {{ token.owner_address }}
+                        </div>
+                    </div>
+
 
                 </div>
             </div>
             {% endfor %}
+            {% endif %}
         </div>
     </div>
 
