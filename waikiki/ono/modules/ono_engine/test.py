@@ -32,11 +32,11 @@ def testComparison(file_path):
     compare_method = cv.HISTCMP_CORREL
 
     # webdriver 실행
-    options = webdriver.ChromeOptions()
-    options.add_argument("headless")
+    #options = webdriver.ChromeOptions()
+    #options.add_argument("headless")
 
     # dr = webdriver.Chrome(cur_path+'/chromedriver', options=options) #(linux)chromedriver 설치 경로
-    dr = webdriver.Chrome(cur_path+'/chromedriver.exe', options=options) #(windows)chromedriver.exe 설치 경로
+    #dr = webdriver.Chrome(cur_path+'/chromedriver.exe', options=options) #(windows)chromedriver.exe 설치 경로
 
     temp_url_list = list(TempUrl.objects.all())
 
@@ -44,24 +44,24 @@ def testComparison(file_path):
     max_path=''
     for item in temp_url_list:
         # target page 접근
-        dr.get(item.ipfs_path)
+        #dr.get(item.ipfs_path)
 
         #html source 추출
-        html_source = dr.page_source
+        #html_source = dr.page_source
 
-        soup = BeautifulSoup(html_source, 'html.parser')
-        product_img_url = soup.select_one('body > img')['src']
+        #soup = BeautifulSoup(html_source, 'html.parser')
+        product_img_url = item.ipfs_path
         urllib.request.urlretrieve(product_img_url, cur_path+'/image.png') #url 이미지 임시 저장 경로. 종료 시 삭제
-
         hsv_target = cv.cvtColor(cv.imread(cur_path+'/image.png'), cv.COLOR_BGR2HSV)
         hist_target = cv.calcHist([hsv_target], channels, None, histSize, ranges, accumulate=False)
         cv.normalize(hsv_target, hsv_target, alpha=0, beta=1, norm_type=cv.NORM_MINMAX)
 
         similarity = cv.compareHist(hist_base, hist_target, compare_method)
 
-        similarity = 1.0 if (similarity>1.0) else similarity
+        similarity = 1.0 if (similarity > 1.0) else similarity
+        similarity = 0.0 if (similarity < 0.0) else similarity
 
-        if (similarity>max_similarity) :
+        if (similarity > max_similarity) :
             max_similarity = similarity
             max_path = item.ipfs_path
 
