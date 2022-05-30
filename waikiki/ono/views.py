@@ -20,11 +20,16 @@ def index(request):
 
 
 def dashboard(request, user_id):
-    collections = Collection.objects.all()
-    tokens = Token.objects.all()
+    onoUser = get_object_or_404(OnoUser, pk=user_id)
+    print("[dashboard] onoUser = ", onoUser)
 
-    return render(request, 'ono/dashboard.html', {'collections': collections, 'tokens': tokens})
+    # Organisation.objects.filter(name__iexact = 'Fjuk inc')
+    collections = Collection.objects.filter(user_id=onoUser)
+    if len(collections) != 0:
+        tokens = Token.objects.filter(collection_id=collections[0])
+        return render(request, 'ono/dashboard.html', {'collections': collections, 'tokens': tokens})
 
+    return render(request, 'ono/dashboard.html')
 
 def search(request):
     print("[", request.method, "], /search")

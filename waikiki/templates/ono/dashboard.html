@@ -52,7 +52,7 @@
                 My Ethereum Address
             </div>
             <div id="eth_address_bottom" class="ui attached stacked bottom segment">
-                <span id="my_eth_address">{{ user.eth_address }}</span> <a onclick="copyToClipboard('#my_eth_address')"
+                <span id="my_eth_address" class="ui label big">{{ user.eth_address }}</span> <a onclick="copyToClipboard('#my_eth_address')"
                     style="cursor: pointer;"><i class="copy outline icon"></i></a>
             </div>
 
@@ -61,6 +61,9 @@
                 My Collections
             </div>
             <div id="my_collections_bottom" class="ui attached stacked bottom segment">
+                {% if collections == null %}
+                <div class="ui grey label">EMPTY</div>
+                {% else %}
                 <div class="ui grid stackable container">
                     {% for collection in collections.all %}
                     <div id="container_main" class="eight wide column">
@@ -82,6 +85,7 @@
                     </div>
                     {% endfor %}
                 </div>
+                {% endif %}
 
             </div>
 
@@ -90,6 +94,9 @@
                 My Tokens
             </div>
             <div id="my_tokens_bottom" class="ui attached stacked bottom segment">
+                {% if tokens == null %}
+                <div class="ui grey label">EMPTY</div>
+                {% else %}
                 {% for token in tokens.all %}
                 <div id="container_main" class="eight wide column">
                     <div id="my_tokens_top" class="ui top attached header inverted black segment"
@@ -98,8 +105,7 @@
                     </div>
                     <div id="my_tokens_bottom" class="ui attached stacked bottom segment">
                         <div class="ui small header">Media</div>
-                        <img id="token_img" class="ui rounded tiny image" src="{{token.ipfs_path}}"
-                            width="100%">
+                        <img id="token_img" class="ui rounded tiny image" src="{{token.ipfs_path}}" width="100%">
                         <div class="ui small header">Title</div>
                         {{ token.title }}
                         <div class="ui small header">IPFS Path</div>
@@ -109,6 +115,7 @@
                     </div>
                 </div>
                 {% endfor %}
+                {% endif %}
             </div>
         </div>
     </div>
