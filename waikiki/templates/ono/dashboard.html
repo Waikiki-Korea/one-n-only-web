@@ -52,8 +52,9 @@
                 My Ethereum Address
             </div>
             <div id="eth_address_bottom" class="ui attached stacked bottom segment">
-                <span id="my_eth_address">{{ user.eth_address }}</span> <a onclick="copyToClipboard('#my_eth_address')"
-                    style="cursor: pointer;"><i class="copy outline icon"></i></a>
+                <span id="my_eth_address" class="ui label big">{{ user.eth_address }}</span> <a
+                    onclick="copyToClipboard('#my_eth_address')" style="cursor: pointer;"><i
+                        class="copy outline icon"></i></a>
             </div>
 
             <div id="my_collections_top" class="ui top attached header inverted brown segment"
@@ -61,6 +62,9 @@
                 My Collections
             </div>
             <div id="my_collections_bottom" class="ui attached stacked bottom segment">
+                {% if not collections %}
+                <div class="ui grey label">EMPTY</div>
+                {% else %}
                 <div class="ui grid stackable container">
                     {% for collection in collections.all %}
                     <div id="container_main" class="eight wide column">
@@ -82,6 +86,7 @@
                     </div>
                     {% endfor %}
                 </div>
+                {% endif %}
 
             </div>
 
@@ -90,6 +95,9 @@
                 My Tokens
             </div>
             <div id="my_tokens_bottom" class="ui attached stacked bottom segment">
+                {% if not tokens %}
+                <div class="ui grey label">EMPTY</div>
+                {% else %}
                 {% for token in tokens.all %}
                 <div id="container_main" class="eight wide column">
                     <div id="my_tokens_top" class="ui top attached header inverted black segment"
@@ -97,18 +105,31 @@
                         {{ token.id }}
                     </div>
                     <div id="my_tokens_bottom" class="ui attached stacked bottom segment">
-                        <div class="ui small header">Media</div>
-                        <img id="token_img" class="ui rounded tiny image" src="{{token.ipfs_path}}"
-                            width="100%">
-                        <div class="ui small header">Title</div>
-                        {{ token.title }}
-                        <div class="ui small header">IPFS Path</div>
-                        <a href="{{ token.ipfs_path }}" target="_blank">{{ token.ipfs_path }}</a>
-                        <div class="ui small header">Description</div>
-                        {{ token.description }}
+                        <div class="ui horizontal segments">
+                            <div class="ui segment">
+                                <center>
+                                <img id="token_img" class="ui rounded medium image" src="{{token.ipfs_path}}"
+                                    width="100%">
+                                </center>
+                            </div>
+                            <div class="ui segment" style="white-space: nowrap;overflow:hidden;text-overflow:ellipsis;">
+                                <div class="ui small header">Collection</div>
+                                {{ token.collection_id.title }}
+                                <div class="ui small header">Title</div>
+                                {{ token.title }}
+                                <div class="ui small header">IPFS Path</div>
+                                <a href="{{ token.ipfs_path }}" target="_blank">{{ token.ipfs_path }}</a>
+                                <div class="ui small header">Description</div>
+                                {{ token.description }}
+                                <div class="ui small header">Owner</div>
+                                {{ token.owner_address }}
+                            </div>
+                        </div>
+
                     </div>
                 </div>
                 {% endfor %}
+                {% endif %}
             </div>
         </div>
     </div>

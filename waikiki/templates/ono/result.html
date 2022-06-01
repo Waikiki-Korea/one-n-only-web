@@ -24,16 +24,38 @@
                 <p>{{ reason }}</p>
             </div>
             {% if similarity %}
-            <div class="ui icon message">
-                <i class="eye icon"></i>
-                <div class="content">
-                    <div class="header">
-                        Similarity
+
+            <div class="ui internally celled grid">
+                <div class="row">
+                    <div class="three wide column center aligned">
+                        Your Image
                     </div>
-                    <p>{{ similarity }}</p>
-                    {% if duration %}
-                    <p>Execution time : {{ duration }}</p>
-                    {% endif %}
+                    <div class="ten wide column center aligned">
+                        Information
+                    </div>
+                    <div class="three wide column center aligned">
+                        Similar Image
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="three wide column">
+                        <img class="ui rounded small image" src="/media/{{ img_path }}">
+                    </div>
+                    <div class="ten wide column">
+                        <div class="header">
+                            <b>Similarity</b>
+                        </div>
+                        <p>{{ similarity }} %</p>
+                        {% if duration %}
+                        <div class="header">
+                            <b>Execution time</b>
+                        </div>
+                        <p>{{ duration }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="three wide column">
+                        <img class="ui rounded small image" src="{{ orig_path }}">
+                    </div>
                 </div>
             </div>
             {% endif %}

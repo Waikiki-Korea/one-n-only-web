@@ -114,7 +114,6 @@ def mint_item(my_address, my_private_key, my_contract_address, my_abi, to_addres
     print("[2] ", token_id)
     print("[3] ", ipfs_uri)
 
-
     nft_contract_tx = nft_contract.functions.mint(to_address, int(token_id), ipfs_uri).buildTransaction(
         {
             'chainId': _chain_id,
@@ -140,18 +139,24 @@ def mint_item(my_address, my_private_key, my_contract_address, my_abi, to_addres
     return response
 
 
-def testSearch(item):
-    print("[testSearch] : ", item)
-    print("[testSearch] isConnected = ", w3.isConnected())
+def search_tx(item):
+    print("[search_tx] : ", item)
+    print("[search_tx] isConnected = ", w3.isConnected())
+
+    input_str = w3.eth.get_transaction(item)['input']
+    input_str = input_str.rstrip('0')
+    index = input_str.find('68747470')
 
     my_info = {
-        "accounts": w3.eth.accounts,
+        # "accounts": w3.eth.accounts,
         "chain_id": w3.eth.chain_id,
-        "balance": "",
-        "block_number": w3.eth.get_block_number(),
+        # "balance": "",
+        # "block_number": w3.eth.get_block_number(),
         "get_transaction_count": "",
-        "get_transaction": w3.eth.get_transaction(item)['input']
+        "get_transaction": w3.eth.get_transaction(item),
+        "decoded_input": Web3.toText(input_str[index:])
     }
+
     print(my_info)
 
     return my_info

@@ -5,8 +5,8 @@ from django.http import JsonResponse
 from django.http import Http404
 from ono.models import Collection, OnoUser, Token, TempImage, Abi
 from django.contrib.auth import get_user_model
-from ono.modules.ono_engine.test import testComparison
-from ono.modules.ono_web3.nft_contract import testSearch, create_nft_contract, mint_item
+from ono.modules.ono_engine.imge_comparison import compare_image
+from ono.modules.ono_web3.nft_contract import search_tx, create_nft_contract, mint_item
 from ono.modules.ono_utils.ono_utils import removeFile
 import os
 import ipfsApi
@@ -20,10 +20,16 @@ def index(request):
 
 
 def dashboard(request, user_id):
-    collections = Collection.objects.all()
-    tokens = Token.objects.all()
+    onoUser = get_object_or_404(OnoUser, pk=user_id)
+    print("[dashboard] onoUser = ", onoUser)
 
-    return render(request, 'ono/dashboard.html', {'collections': collections, 'tokens': tokens})
+    # Organisation.objects.filter(name__iexact = 'Fjuk inc')
+    collections = Collection.objects.filter(user_id=onoUser)
+    if len(collections) != 0:
+        tokens = Token.objects.filter(collection_id=collections[0])
+        return render(request, 'ono/dashboard.html', {'collections': collections, 'tokens': tokens})
+
+    return render(request, 'ono/dashboard.html')
 
 
 def search(request):
@@ -34,7 +40,7 @@ def search(request):
 
         response = {
             "search_text": request.POST['search'],
-            "result": testSearch(request.POST['search'])
+            "result": search_tx(request.POST['search'])
         }
 
     else:
@@ -92,8 +98,8 @@ def collection(request, user_id):
     return render(request, 'ono/result.html', response)
 
 
-def mint(request, _user_id):
-    print("[", request.method, "], /", _user_id, "/mint")
+def mint(request, user_id):
+    print("[", request.method, "], /", user_id, "/mint")
 
     response = {
         "result": "failed",
@@ -103,7 +109,7 @@ def mint(request, _user_id):
         print('[ Request ] ', request)
 
         # id, collection_id, title, media_type, ipfs_path, token_path, sha256_hash, description, owner, created_date, updated_date
-        # collections = get_list_or_404(Collection, user_id=_user_id)
+        # collections = get_list_or_404(Collection, user_id=user_id)
         collection = get_object_or_404(
             Collection, pk=int(request.POST['collection_id']))
 
@@ -111,7 +117,7 @@ def mint(request, _user_id):
         # token.collection_id = collections[int(request.POST['collection_id'])]
         token.collection_id = collection
 
-        onoUser = get_object_or_404(OnoUser, pk=_user_id)
+        onoUser = get_object_or_404(OnoUser, pk=user_id)
         # onoUser = get_object_or_404(OnoUser, pk=token.collection_id.user_id)
 
         token.title = request.POST['title']
@@ -121,6 +127,7 @@ def mint(request, _user_id):
         # token.sha256_hash = request.POST['sha256_hash']
         token.description = request.POST['description']
         # token.owner = request.POST['owner']
+        token.owner_address = onoUser.eth_address
         for img in request.FILES.getlist('token_image'):
             token.token_image = img
             break
@@ -130,7 +137,7 @@ def mint(request, _user_id):
         tempImage.image = token.token_image
         tempImage.save()
 
-        image_response = testComparison(os.path.join(
+        image_response = compare_image(os.path.join(
             os.getcwd() + "/media/" + str(tempImage.image)))
         print("[image_response] ", image_response)
 
@@ -141,7 +148,7 @@ def mint(request, _user_id):
             res = api.add(os.path.join(
                 os.getcwd() + "/media/" + str(tempImage.image)))
             print("[IPFS RES] ", res[0]['Hash'])
-            token.ipfs_path = "http://localhost:8080/ipfs/" + \
+            token.ipfs_path = "http://127.0.0.1:8080/ipfs/" + \
                 str(res[0]['Hash'])
             token.save()
 
@@ -154,13 +161,13 @@ def mint(request, _user_id):
                           token.id,
                           token.ipfs_path)
 
-            
-
             response = {
                 "result": "successful",
                 "reason": "OK",
                 "similarity": image_response['similarity'],
-                "duration": image_response['duration']
+                "duration": image_response['duration'],
+                "orig_path": image_response['path'],
+                "img_path": str(tempImage.image)
             }
         else:
             print("[similarity] This is a scam!!!")
@@ -168,14 +175,16 @@ def mint(request, _user_id):
                 "result": "failed",
                 "reason": "Similarity is so high.",
                 "similarity": image_response['similarity'],
-                "duration": image_response['duration']
+                "duration": image_response['duration'],
+                "orig_path": image_response['path'],
+                "img_path": str(tempImage.image)
             }
         # 이미지 판단 끝 ]
 
     else:
         print('..')
-        # collections = list(Collection.objects.filter(user_id=_user_id))
-        # get_object_or_404(Collection, user_id=_user_id)
+        # collections = list(Collection.objects.filter(user_id=user_id))
+        # get_object_or_404(Collection, user_id=user_id)
         # print("[ collections ] ", collections)
         return render(request, 'ono/mint.html')
 
@@ -200,7 +209,7 @@ def test_image(request):
         tempImage.save()
 
         # 이미지 판단 시작 [
-        image_response = testComparison(os.path.join(
+        image_response = compare_image(os.path.join(
             os.getcwd() + "/media/" + str(tempImage.image)))
         print("[image_response] ", image_response)
 
