@@ -3,13 +3,12 @@
     <form class="ui form" action="{% url 'ono:search' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="ui input" style="margin-right:40px;">
-            <input type="text" name="search" id="search" placeholder="Search..."
+            <input type="text" name="search" id="search" placeholder="Search Tx"
                 value="{{ form.search.value|default_if_none:'' }}" style="margin-right:2px;">
             <button class="ui submit blue icon button" type="submit" id="submit_button"><i
                     class="icon search"></i></button>
         </div>
     </form>
-
 </div>
 
 <div class="ui container" style="padding-top:5px;">
@@ -34,7 +33,7 @@
         </a>
         {% endif %}
         <!-- TODO: DELETE THESE MENUS -->
-        <a class="item" href="{% url 'ono:make_contract' %}">
+        <!-- <a class="item" href="{% url 'ono:make_contract' %}">
             make contract
         </a>
         <a class="item" href="{% url 'ono:make_token' %}">
@@ -42,7 +41,7 @@
         </a>
         <a class="item" href="{% url 'ono:test_image' %}">
             Test image
-        </a>
+        </a> -->
         <div class="right menu">
             {% if user.is_authenticated %}
             <a class="item" href="{% url 'common:update' pk=user.id %}">{{ user.username }}</a>

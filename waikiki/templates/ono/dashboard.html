@@ -62,7 +62,7 @@
                 My Collections
             </div>
             <div id="my_collections_bottom" class="ui attached stacked bottom segment">
-                {% if collections == null %}
+                {% if not collections %}
                 <div class="ui grey label">EMPTY</div>
                 {% else %}
                 <div class="ui grid stackable container">
@@ -95,7 +95,7 @@
                 My Tokens
             </div>
             <div id="my_tokens_bottom" class="ui attached stacked bottom segment">
-                {% if tokens == null %}
+                {% if not tokens %}
                 <div class="ui grey label">EMPTY</div>
                 {% else %}
                 {% for token in tokens.all %}
@@ -107,8 +107,10 @@
                     <div id="my_tokens_bottom" class="ui attached stacked bottom segment">
                         <div class="ui horizontal segments">
                             <div class="ui segment">
+                                <center>
                                 <img id="token_img" class="ui rounded medium image" src="{{token.ipfs_path}}"
                                     width="100%">
+                                </center>
                             </div>
                             <div class="ui segment" style="white-space: nowrap;overflow:hidden;text-overflow:ellipsis;">
                                 <div class="ui small header">Collection</div>

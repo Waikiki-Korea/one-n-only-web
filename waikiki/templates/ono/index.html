@@ -35,7 +35,7 @@
             Collections
         </div>
         <div id="my_collections_bottom" class="ui attached stacked bottom segment">
-            {% if collections == null %}
+            {% if not collections %}
             <div class="ui grey label">EMPTY</div>
             {% else %}
             <div class="ui grid stackable container">
@@ -56,7 +56,6 @@
                         <div class="ui small header">Description</div>
                         {{ collection.description }}
                         <div class="ui small header">Owner</div>
-
                         {{ collection.user_id }}
                     </div>
                 </div>
@@ -70,7 +69,7 @@
             Tokens
         </div>
         <div id="my_tokens_bottom" class="ui attached stacked bottom segment">
-            {% if tokens == null %}
+            {% if not tokens %}
             <div class="ui grey label">EMPTY</div>
             {% else %}
             {% for token in tokens.all %}
@@ -82,14 +81,15 @@
                 <div id="my_tokens_bottom" class="ui attached stacked bottom segment">
                     <div class="ui horizontal segments">
                         <div class="ui segment">
-                            {% if token.ipfs_path|first in 'http' %}
-                            <img class="ui medium rounded image" src="{{ token.ipfs_path }}">
-                            {% elif token.ipfs_path == '' %}
-                            <img class="ui medium rounded image" src="/media/white-image.png">
-                            {% else %}
-                            <img class="ui medium rounded image" src="https://ipfs.io/ipfs/{{ token.ipfs_path }}">
-                            {% endif %}
-
+                            <center>
+                                {% if token.ipfs_path|first in 'http' %}
+                                <img class="ui medium rounded image" src="{{ token.ipfs_path }}">
+                                {% elif token.ipfs_path == '' %}
+                                <img class="ui medium rounded image" src="/media/white-image.png">
+                                {% else %}
+                                <img class="ui medium rounded image" src="https://ipfs.io/ipfs/{{ token.ipfs_path }}">
+                                {% endif %}
+                            </center>
                         </div>
                         <div class="ui segment" style="white-space: nowrap;overflow:hidden;text-overflow:ellipsis;">
                             <div class="ui small header">Collection</div>
